@@ -223,7 +223,7 @@ function allEvents(cluster: Cluster, now: number): KEvent[] {
         type: "Normal",
         reason: "ScalingReplicaSet",
         object: `deployment/${d.name}`,
-        message: `Scaled up replica set ${d.name}-${rs} to ${d.replicas}`,
+        message: `Scaled up replica set ${d.name}-${rs} to ${pods.filter((p) => p.labels["pod-template-hash"] === rs).length}`,
         ageSeconds: Math.min(...pods.map((p) => p.ageSeconds)),
       });
     }
@@ -392,8 +392,15 @@ function describeDeployment(cluster: Cluster, d: Deployment, now: number): strin
   lines.push(`    Environment:${env.length ? "" : "  <none>"}`);
   for (const [k, v] of env) lines.push(`      ${k}:  ${v}`);
   const rs = pods.at(-1)?.labels["pod-template-hash"];
-  lines.push(`NewReplicaSet:   ${d.name}-${rs} (${pods.filter((p) => p.labels["pod-template-hash"] === rs).length}/${d.replicas} replicas created)`);
-  lines.push(eventsBlock(rs ? [{ type: "Normal", reason: "ScalingReplicaSet", object: d.name, message: `Scaled up replica set ${d.name}-${rs} to ${d.replicas}`, ageSeconds: pods.at(-1)!.ageSeconds }] : []));
+  const created = pods.filter((p) => p.labels["pod-template-hash"] === rs).length;
+  lines.push(`NewReplicaSet:   ${d.name}-${rs} (${created}/${d.replicas} replicas created)`);
+  lines.push(
+    eventsBlock(
+      rs
+        ? [{ type: "Normal", reason: "ScalingReplicaSet", object: d.name, message: `Scaled up replica set ${d.name}-${rs} to ${created}`, ageSeconds: pods.at(-1)!.ageSeconds }]
+        : [],
+    ),
+  );
   return lines.join("\n");
 }
 

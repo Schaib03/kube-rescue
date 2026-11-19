@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kube-rescue · fix broken Kubernetes clusters</title>
+    <meta name="description" content="A browser game: you are on call, production is broken, and all you have is kubectl." />
+    <meta property="og:title" content="kube-rescue" />
+    <meta property="og:description" content="Fix eight broken Kubernetes clusters with kubectl, right in your browser." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23326ce5'/><text x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='monospace'>k$</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <span class="logo">k$</span>
+        <div>
+          <h1>kube-rescue</h1>
+          <p>You are on call. Production is broken. All you have is kubectl.</p>
+        </div>
+      </div>
+      <nav class="levels" id="levels" aria-label="Levels"></nav>
+      <a class="source" href="https://github.com/Schaib03/kube-rescue" target="_blank" rel="noopener">Source</a>
+    </header>
+
+    <main class="layout">
+      <section class="terminal" aria-label="Terminal">
+        <div class="titlebar">
+          <span class="dot red"></span><span class="dot amber"></span><span class="dot green"></span>
+          <span class="title" id="context">oncall@acme: ~ (kind-prod / shop)</span>
+        </div>
+        <div class="output" id="output" role="log" aria-live="polite"></div>
+        <form class="prompt" id="prompt" autocomplete="off">
+          <label for="command" class="ps1">$</label>
+          <input id="command" name="command" spellcheck="false" autocapitalize="off" aria-label="Command" />
+        </form>
+      </section>
+
+      <aside class="side">
+        <section class="card mission" id="mission"></section>
+        <section class="card map">
+          <h2>Cluster</h2>
+          <div id="map"></div>
+        </section>
+      </aside>
+    </main>
+
+    <dialog id="win">
+      <div class="win-body">
+        <p class="eyebrow">Incident resolved</p>
+        <h2 id="win-title"></h2>
+        <div class="stars" id="win-stars"></div>
+        <p id="win-stats" class="muted"></p>
+        <div class="lesson" id="win-lesson"></div>
+        <div class="actions">
+          <button type="button" id="win-replay" class="ghost">Replay</button>
+          <button type="button" id="win-next">Next incident</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
